@@ -1,4 +1,4 @@
-import {h, Component} from 'composi';
+import { h, Component } from 'composi';
 import Time from '../../lib/time';
 
 const Display = (props) => {

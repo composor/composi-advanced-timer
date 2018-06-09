@@ -1,4 +1,4 @@
-import {h, Component } from 'composi';
+import { h, Component } from 'composi';
 import Display from './display';
 import Keypad from './keypad';
 import Controls from './controls';
@@ -32,7 +32,11 @@ class Timer extends Component {
 
   // HANDLE DISPLAY
   handleDisplayFocusChange(unitOfTime) {
-    this.setState(() => ({ unitOfTime }));
+    console.log(unitOfTime)
+    this.setState(prevState => {
+      prevState.unitOfTime = unitOfTime
+      return prevState
+    });
   }
 
 
@@ -52,25 +56,31 @@ class Timer extends Component {
 
   setHours(hours) {
     if (hours < 0) {
-      this.setState(() => ({ hours: '00' }));
+      this.setState(prevState => { 
+        prevState.hours = '00' 
+        return prevState
+      });
     } else {
-      this.setState((prevState) => {
+      this.setState(prevState => {
         hours = parseInt(this.formatTime(prevState.hours + hours));
 
         if (hours > 99) {
           hours = prevState.hours;
         }
-
-        return ({ hours: this.formatTime(hours) });
+        prevState.hours = this.formatTime(hours)
+        return prevState;
       });
     }
   }
 
   setMinutes(minutes) {
     if (minutes < 0) {
-      this.setState(() => ({ minutes: '00' }));
+      this.setState(prevState => { 
+        prevState.minutes = '00' 
+        return prevState
+      });
     } else {
-      this.setState((prevState) => {
+      this.setState(prevState => {
         minutes = parseInt(this.formatTime(prevState.minutes + minutes));
 
         if (minutes < 60) {
@@ -80,8 +90,8 @@ class Timer extends Component {
         } else if (minutes > 59) {
           minutes = parseInt(minutes.toString().slice(minutes.toString().length - 1));
         }
-
-        return ({ minutes: this.formatTime(minutes) });
+        prevState.minutes = this.formatTime(minutes)
+        return prevState;
       });
     }
   }
@@ -89,9 +99,12 @@ class Timer extends Component {
   setSeconds(seconds) {
 
     if (seconds < 0) {
-      this.setState(() => ({ seconds: '00' }));
+      this.setState(prevState => {
+        prevState.seconds = '00'
+        return prevState
+      });
     } else {
-      this.setState((prevState) => {
+      this.setState(prevState => {
         seconds = parseInt(this.formatTime(prevState.seconds + seconds));
 
         if (seconds < 60) {
@@ -101,8 +114,9 @@ class Timer extends Component {
         } else if (seconds > 59) {
           seconds = parseInt(seconds.toString().slice(seconds.toString().length - 1));
         }
+        prevState.seconds = this.formatTime(seconds)
 
-        return ({ seconds: this.formatTime(seconds) });
+        return prevState;
       });
     }
   }
@@ -116,11 +130,12 @@ class Timer extends Component {
   // HANDLE CONTROLS
   canStart() {
 
-    this.setState((prevState) => ({
-      canStart: prevState.status !== 'STARTED' && (parseInt(prevState.hours) > 0
+    this.setState(prevState => {
+      prevState.canStart = prevState.status !== 'STARTED' && (parseInt(prevState.hours) > 0
         || parseInt(prevState.minutes) > 0
         || parseInt(prevState.seconds) > 0)
-    }));
+      return prevState
+    });
   }
 
   handleControlsStart() {
@@ -130,22 +145,33 @@ class Timer extends Component {
   startTimer() {
     if (this.state.status !== 'STARTED') {
 
-      this.setState(() => ({ status: 'STARTED' }));
+      this.setState(prevState => { 
+        prevState.status = 'STARTED' 
+        return prevState
+      });
 
       const totalMilliseconds = ((parseInt(this.state.hours) * 60 * 60)
         + (parseInt(this.state.minutes) * 60)
         + parseInt(this.state.seconds))
         * 1000;
 
-      this.setState(() => ({ timeInterval: parseInt(totalMilliseconds) }));
+      this.setState(prevState => { 
+        prevState.timeInterval = parseInt(totalMilliseconds) 
+        return prevState
+      });
 
       this.interval = setInterval(() => {
 
-        this.setState((prevState) => ({ timeInterval: prevState.timeInterval - 10 }));
+        this.setState(prevState => { 
+          prevState.timeInterval = prevState.timeInterval - 10
+          return prevState 
+        });
 
         if (this.state.timeInterval === 0) {
           clearInterval(this.interval);
-          this.setState(() => ({ status: null }));
+          this.setState(prevState => { 
+            prevState.status = null 
+          });
         }
       }, 10);
     }
@@ -154,7 +180,10 @@ class Timer extends Component {
   handleControlsStop() {
     if (this.state.status === 'STARTED') {
       clearInterval(this.interval);
-      this.setState(() => ({ status: 'STOPPED' }));
+      this.setState(prevState => { 
+        prevState.status = 'STOPPED' 
+        return prevState
+      });
     }
   }
 
@@ -162,14 +191,18 @@ class Timer extends Component {
     if (this.state.status === 'STOPPED') {
       this.interval = setInterval(() => {
 
-        this.setState((prevState) => ({
-          status: 'STARTED',
-          timeInterval: prevState.timeInterval - 10 
-        }));
+        this.setState(prevState => {
+          prevState.status= 'STARTED',
+          prevState.timeInterval = prevState.timeInterval - 10 
+          return prevState
+        });
 
         if (this.state.timeInterval === 0) {
           clearInterval(this.interval);
-          this.setState(() => ({ status: null }));
+          this.setState(prevState => { 
+            prevState.status = null 
+            return prevState
+          });
         }
       }, 10);
     }
@@ -177,7 +210,11 @@ class Timer extends Component {
 
   handleControlsReset() {
     clearInterval(this.interval);
-    this.setState(() => ({ status: null, timeInterval: null }));
+    this.setState(prevState => { 
+      prevState.status = null
+      prevState.timeInterval = null 
+      return prevState
+    });
   }
 
 

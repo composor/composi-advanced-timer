@@ -1,4 +1,4 @@
-import {h, Component} from 'composi';
+import { h, Component } from 'composi';
 
 const Keypad = (props) => (
   <div>
